@@ -1,0 +1,36 @@
+namespaceOverride: "monitoring"
+
+alertmanagerSpec:
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: topology.kubernetes.io/zone
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          app: alertmanager
+prometheus:
+  prometheusSpec:
+    topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app: prometheus
+    thanos:
+      objectStorageConfig:
+        key: secret-monitoring-thanos-s3.yml
+        name: config
+  thanosService:
+    enabled: true
+
+thanosRulerSpec:
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: topology.kubernetes.io/zone
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          app: thanos-ruler
+
+# https://wlsdn3004.tistory.com/30
