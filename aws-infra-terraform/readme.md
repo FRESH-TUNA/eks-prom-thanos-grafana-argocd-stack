@@ -13,6 +13,8 @@ mv id_rsa ec2-jumper.key
 ## 위에서 발급한 ec2-jumper, ssh private key, jumper-dmz 인스턴스로 복사
 ```bash
 scp -i .credentials/ec2-jumper/ec2-jumper.key .credentials/ec2-jumper/ec2-jumper.key ec2-user@<your-jumper-dmz-eip>:ec2-jumper.key
+
+scp -i ec2-jumper.key ec2-jumper.key ec2-user@52.79.93.230:ec2-jumper.key
 ```
 
 ## jumper-dmz, jumper-eks (private) 접속 테스트

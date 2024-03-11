@@ -1,7 +1,5 @@
 provider "kubernetes" {
-  kubernetes {
-    config_path = "~/.kube/config"
-  }
+  config_path = "~/.kube/config"
 
 #   # localhost registry with password protection
 #   registry {

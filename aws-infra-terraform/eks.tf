@@ -93,6 +93,9 @@ module "eks" {
     # } 
   }
 
+# eks service account federation with oidc
+# and give iam policy to service account
+enable_irsa = true
 
 enable_cluster_creator_admin_permissions = true
 
