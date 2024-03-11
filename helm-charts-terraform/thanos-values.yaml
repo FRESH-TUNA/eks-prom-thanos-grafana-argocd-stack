@@ -1,0 +1,5 @@
+namespaceOverride: "monitoring"
+
+objectStorageConfig:
+  key: secret-monitoring-thanos-s3
+  name: config

@@ -1,29 +1,17 @@
 # https://wlsdn3004.tistory.com/30
-
 namespaceOverride: "monitoring"
 
-prometheus-node-exporter:
-  namespaceOverride: "default"
-
-alertmanager:
-  alertmanagerSpec:
-    topologySpreadConstraints:
-      - maxSkew: 1
-        topologyKey: topology.kubernetes.io/zone
-        whenUnsatisfiable: DoNotSchedule
-        labelSelector:
-          matchLabels:
-            app: alertmanager
-      - maxSkew: 1
-        topologyKey: kubernetes.io/hostname
-        whenUnsatisfiable: DoNotSchedule
-        labelSelector:
-          matchLabels:
-            app: alertmanager
+alertmanagerSpec:
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: topology.kubernetes.io/zone
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          app: alertmanager
 
 prometheus:
   prometheusSpec:
-    replicas: 2
     topologySpreadConstraints:
       - maxSkew: 1
         topologyKey: topology.kubernetes.io/zone
@@ -31,48 +19,19 @@ prometheus:
         labelSelector:
           matchLabels:
             app: prometheus
-      - maxSkew: 1
-        topologyKey: kubernetes.io/hostname
-        whenUnsatisfiable: DoNotSchedule
-        labelSelector:
-          matchLabels:
-            app: prometheuss
     thanos:
+      image: quay.io/thanos/thanos:v0.28.1
       objectStorageConfig:
-        key: secret-monitoring-thanos-s3.yml
+        key: secret-monitoring-thanos-s3
         name: config
   thanosService:
     enabled: true
 
-thanosRuler:
-  enabled: true
-  thanosRulerSpec:
-    topologySpreadConstraints:
-      - maxSkew: 1
-        topologyKey: topology.kubernetes.io/zone
-        whenUnsatisfiable: DoNotSchedule
-        labelSelector:
-          matchLabels:
-            app: thanos-ruler
-      - maxSkew: 1
-        topologyKey: kubernetes.io/hostname
-        whenUnsatisfiable: DoNotSchedule
-        labelSelector:
-          matchLabels:
-            app: thanos-ruler
-
-grafana:
-  replicas: 2
+thanosRulerSpec:
   topologySpreadConstraints:
     - maxSkew: 1
       topologyKey: topology.kubernetes.io/zone
       whenUnsatisfiable: DoNotSchedule
       labelSelector:
         matchLabels:
-          app: grafana
-    - maxSkew: 1
-      topologyKey: kubernetes.io/hostname
-      whenUnsatisfiable: DoNotSchedule
-      labelSelector:
-        matchLabels:
-          app: grafana
+          app: thanos-ruler
