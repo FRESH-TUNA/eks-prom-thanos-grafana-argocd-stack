@@ -24,7 +24,7 @@ resource "aws_iam_role" "thanos" {
           "StringLike": {
             # "oidc.eks.us-east-2.amazonaws.com/id/OIDC_OF_EKS_CLUSTER:sub": "system:serviceaccount::",
             # "oidc.eks.us-east-2.amazonaws.com/id/OIDC_OF_EKS_CLUSTER:aud": "sts.amazonaws.com"
-            "${module.eks.oidc_provider}:sub": "system:serviceaccount::",
+            "${module.eks.oidc_provider}:sub": "system:serviceaccount:monitoring:kube-prometheus-stack-prometheus",
             "${module.eks.oidc_provider}:aud": "sts.amazonaws.com"
           }
         }
@@ -37,7 +37,10 @@ data "aws_iam_policy_document" "thanos" {
   statement {
     effect    = "Allow"
     actions   = ["s3:*"]
-    resources = [aws_s3_bucket.thanos.arn]
+    resources = [
+      aws_s3_bucket.thanos.arn,
+      "${aws_s3_bucket.thanos.arn}/*"
+    ]
   }
 }
 
