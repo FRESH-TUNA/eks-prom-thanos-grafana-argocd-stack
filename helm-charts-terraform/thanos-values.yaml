@@ -3,3 +3,17 @@ namespaceOverride: "monitoring"
 objectStorageConfig:
   key: secret-monitoring-thanos-s3
   name: config
+
+stores:
+  - kube-prometheus-stack-thanos-discovery.monitoring.svc.cluster.local:10901
+  - thanos-storegateway.monitoring.svc.cluster.local:10901
+  replicaCount: 2
+
+bucketweb:
+  enabled: true
+compactor:
+  enabled: true
+storegateway:
+  enabled: true
+ruler:
+  enabled: false
