@@ -28,11 +28,17 @@ query:
       labelSelector:
         matchLabels:
           app: thanos-query
+  
+  service:
+    type: NodePort
+    nodePorts:
+      http: "22222"
 
 storegateway:
   enabled: true
   
   replicaCount: 2
+
   topologySpreadConstraints:
     - maxSkew: 1
       topologyKey: topology.kubernetes.io/zone
