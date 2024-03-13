@@ -16,7 +16,7 @@ resource "aws_lb_listener_rule" "thanos" {
 
 resource "aws_lb_listener" "thanos" {
   load_balancer_arn = aws_lb.dmz.arn
-  port              = "32591"
+  port              = "30263"
   protocol          = "HTTP"
 #   ssl_policy        = "ELBSecurityPolicy-2016-08"
 #   certificate_arn   = "arn:aws:iam::187416307283:server-certificate/test_cert_rab3wuqwgja25ct3n4jdj2tzu4"
@@ -78,7 +78,7 @@ resource "aws_lb_target_group" "eks" {
     interval            = "30"
     matcher             = "200"
     path                = "/"
-    port                = "32591"
+    port                = "30263"
     protocol            = "HTTP"
     timeout             = "5"
     unhealthy_threshold = "2"
@@ -88,7 +88,7 @@ resource "aws_lb_target_group" "eks" {
   load_balancing_algorithm_type     = "round_robin"
   load_balancing_cross_zone_enabled = "use_load_balancer_configuration"
   name                              = "dmz-targetgroup"
-  port                              = "32591"
+  port                              = "30263"
   protocol                          = "HTTP"
   protocol_version                  = "HTTP1"
   slow_start                        = "0"

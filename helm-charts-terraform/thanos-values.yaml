@@ -7,7 +7,7 @@ query:
 
   dnsDiscovery:
     enabled: true
-    sidecarsService: prometheus-operated
+    sidecarsService: kube-prometheus-stack-thanos-discovery
     sidecarsNamespace: monitoring
 
   replicaCount: 2
@@ -25,6 +25,12 @@ query:
       labelSelector:
         matchLabels:
           app.kubernetes.io/component: query
+
+queryFrontend:
+  service:
+    type: NodePort
+    nodePorts:
+      http: 31004
 
 storegateway:
   enabled: true
