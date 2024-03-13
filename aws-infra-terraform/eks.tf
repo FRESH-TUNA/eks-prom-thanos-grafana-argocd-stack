@@ -7,10 +7,10 @@ module "eks" {
 
   # EKS Add-On 정의
   cluster_addons = {
-    coredns = {
-      most_recent       = true
-      resolve_conflicts = "OVERWRITE"
-    }
+    # coredns = {
+    #   most_recent       = true
+    #   resolve_conflicts = "OVERWRITE"
+    # }
 
     kube-proxy = {
       most_recent = true

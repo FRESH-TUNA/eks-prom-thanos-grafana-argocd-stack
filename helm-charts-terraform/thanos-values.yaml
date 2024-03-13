@@ -1,23 +1,80 @@
 namespaceOverride: "monitoring"
 
 existingObjstoreSecret: secret-monitoring-thanos-s3
+
 query:
   enabled: true
+
+  dnsDiscovery:
+    enabled: true
+    sidecarsService: monitoring
+    sidecarsNamespace: kube-prometheus-stack-thanos-discovery
+
   stores:
-    - kube-prometheus-stack-thanos-discovery.monitoring.svc.cluster.local:10901
     - thanos-storegateway.monitoring.svc.cluster.local:10901
 
-bucketweb:
+  replicaCount: 2
+
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: topology.kubernetes.io/zone
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          app: thanos-query
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          app: thanos-query
+
+storegateway:
   enabled: true
-  serviceAccount:
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::474156821902:role/thanos
+  
+  replicaCount: 2
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: topology.kubernetes.io/zone
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          app: thanos-storegateway
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          app: thanos-storegateway
+
+
+# This is used to inspect bucket blocks from a Web UI.
+# bucketweb:
+#   enabled: true
+#   serviceAccount:
+#     annotations:
+#       eks.amazonaws.com/role-arn: arn:aws:iam::474156821902:role/thanos
 
 compactor:
   enabled: true
 
-storegateway:
-  enabled: true
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: topology.kubernetes.io/zone
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          app: thanos-compactor
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          app: thanos-compactor
+
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::474156821902:role/thanos
 
 ruler:
   enabled: false
