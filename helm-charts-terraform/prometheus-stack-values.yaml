@@ -9,18 +9,43 @@ alertmanagerSpec:
       labelSelector:
         matchLabels:
           app: alertmanager
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          app: alertmanager
 
 prometheus:
   serviceAccount:
-    create: true
-    name: ""
     annotations:
       eks.amazonaws.com/role-arn: "arn:aws:iam::474156821902:role/thanos"
-    automountServiceAccountToken: true
+    #automountServiceAccountToken: true
   replicas: 2
+  thanosService:
+    enabled: true
+
   prometheusSpec:
+    replicas: 2
+    thanos:
+      objectStorageConfig:
+        existingSecret:
+          name: "secret-monitoring-thanos-s3"
+          key: "objstore.yml"
+      blockSize: 60s
     topologySpreadConstraints:
       - maxSkew: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app: kube-prometheus-stack-prometheus
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app: kube-prometheus-stack-prometheus
 
 thanosRulerSpec:
   topologySpreadConstraints:
@@ -30,3 +55,4 @@ thanosRulerSpec:
       labelSelector:
         matchLabels:
           app: thanos-ruler
+
