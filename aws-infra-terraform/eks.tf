@@ -42,7 +42,7 @@ module "eks" {
   # 관리형 노드그룹에 사용할 공통 사항 정의
   eks_managed_node_group_defaults = {
     ami_type                   = "AL2_x86_64"
-    instance_types             = ["t3.medium"]
+    instance_types             = ["t3.large"]
     capacity_type              = "ON_DEMAND"
     iam_role_attach_cni_policy = true
     use_name_prefix            = false  # false하지 않으면 리소스 이름 뒤 임의의 난수값이 추가되어 생성됨
@@ -72,9 +72,9 @@ module "eks" {
   # 관리형 노드 그룹 정의
   eks_managed_node_groups = {
     devops-eks-app-ng = {
-      name         = "monitoring-practice"
+      name         = "monitoring-practice-v2"
       labels = {
-        nodegroup = "monitoring-practice"
+        nodegroup = "monitoring-practice-v2"
       }
       desired_size = 2
       min_size     = 2

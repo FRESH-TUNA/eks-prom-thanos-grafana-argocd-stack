@@ -1,4 +1,5 @@
 resource "helm_release" "thanos" {
+  namespace  = "monitoring"
   name       = "thanos"
 
   repository = "https://charts.bitnami.com/bitnami"

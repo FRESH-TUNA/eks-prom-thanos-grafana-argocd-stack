@@ -9,14 +9,14 @@ resource "aws_lb_listener_rule" "thanos" {
 
   condition {
     path_pattern {
-      values = ["/thanos*"]
+      values = ["/*"]
     }
   }
 }
 
 resource "aws_lb_listener" "thanos" {
   load_balancer_arn = aws_lb.dmz.arn
-  port              = "8888"
+  port              = "32591"
   protocol          = "HTTP"
 #   ssl_policy        = "ELBSecurityPolicy-2016-08"
 #   certificate_arn   = "arn:aws:iam::187416307283:server-certificate/test_cert_rab3wuqwgja25ct3n4jdj2tzu4"
@@ -45,7 +45,7 @@ resource "aws_lb" "dmz" {
 
   name                                        = "alb-dmz"
   preserve_host_header                        = "false"
-  security_groups                             = [aws_security_group.sg-dmz-agw.id, module.eks.cluster_security_group_id]
+  security_groups                             = [aws_security_group.sg-dmz-agw.id, module.eks.cluster_primary_security_group_id]
 
 #   subnet_mapping {
 #     subnet_id = "subnet-0b9f0e192b14560fb"
@@ -78,7 +78,7 @@ resource "aws_lb_target_group" "eks" {
     interval            = "30"
     matcher             = "200"
     path                = "/"
-    port                = "traffic-port"
+    port                = "32591"
     protocol            = "HTTP"
     timeout             = "5"
     unhealthy_threshold = "2"
@@ -88,7 +88,7 @@ resource "aws_lb_target_group" "eks" {
   load_balancing_algorithm_type     = "round_robin"
   load_balancing_cross_zone_enabled = "use_load_balancer_configuration"
   name                              = "dmz-targetgroup"
-  port                              = "80"
+  port                              = "32591"
   protocol                          = "HTTP"
   protocol_version                  = "HTTP1"
   slow_start                        = "0"

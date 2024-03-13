@@ -7,11 +7,8 @@ query:
 
   dnsDiscovery:
     enabled: true
-    sidecarsService: monitoring
-    sidecarsNamespace: kube-prometheus-stack-thanos-discovery
-
-  stores:
-    - thanos-storegateway.monitoring.svc.cluster.local:10901
+    sidecarsService: prometheus-operated
+    sidecarsNamespace: monitoring
 
   replicaCount: 2
 
@@ -21,22 +18,18 @@ query:
       whenUnsatisfiable: DoNotSchedule
       labelSelector:
         matchLabels:
-          app: thanos-query
+          app.kubernetes.io/component: query
     - maxSkew: 1
       topologyKey: kubernetes.io/hostname
       whenUnsatisfiable: DoNotSchedule
       labelSelector:
         matchLabels:
-          app: thanos-query
-  
-  service:
-    type: NodePort
-    nodePorts:
-      http: "22222"
+          app.kubernetes.io/component: query
 
 storegateway:
   enabled: true
-  
+  persistence:
+    enabled: false
   replicaCount: 2
 
   topologySpreadConstraints:
@@ -45,14 +38,17 @@ storegateway:
       whenUnsatisfiable: DoNotSchedule
       labelSelector:
         matchLabels:
-          app: thanos-storegateway
+          app.kubernetes.io/component: storegateway
     - maxSkew: 1
       topologyKey: kubernetes.io/hostname
       whenUnsatisfiable: DoNotSchedule
       labelSelector:
         matchLabels:
-          app: thanos-storegateway
+          app.kubernetes.io/component: storegateway
 
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::474156821902:role/thanos
 
 # This is used to inspect bucket blocks from a Web UI.
 # bucketweb:
@@ -63,6 +59,8 @@ storegateway:
 
 compactor:
   enabled: true
+  persistence:
+    enabled: false
 
   topologySpreadConstraints:
     - maxSkew: 1

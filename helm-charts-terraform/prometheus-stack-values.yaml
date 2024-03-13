@@ -47,12 +47,21 @@ prometheus:
           matchLabels:
             app: kube-prometheus-stack-prometheus
 
-thanosRulerSpec:
-  topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: topology.kubernetes.io/zone
-      whenUnsatisfiable: DoNotSchedule
-      labelSelector:
-        matchLabels:
-          app: thanos-ruler
+grafana:
+  namespaceOverride: "monitoring"
+  service:
+    type: NodePort
+  sidecar:
+    datasources:
+      uid: thanos
+      url: http://thanos-query:9090
+
+# thanosRulerSpec:
+#   topologySpreadConstraints:
+#     - maxSkew: 1
+#       topologyKey: topology.kubernetes.io/zone
+#       whenUnsatisfiable: DoNotSchedule
+#       labelSelector:
+#         matchLabels:
+#           app: thanos-ruler
 
