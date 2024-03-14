@@ -43,3 +43,13 @@ aws eks update-kubeconfig --region ap-northeast-2 --name "monitoring-practice-cl
 
 kubectl get pod -A
 ```
+
+## S3 endpoint
+```bash
+## s3 endpoint 기반으로 동작하도록 구성할것
+https://cloudcasanova.com/when-to-use-an-aws-s3-vpc-endpoint/
+
+## eks의 보안그룹을 제대로 알고 쓸것
+
+## ecr + endpoint을 써보면 좋을듯
+```
