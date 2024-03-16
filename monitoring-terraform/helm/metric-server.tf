@@ -6,6 +6,6 @@ resource "helm_release" "metrics_server" {
   repository       = "https://kubernetes-sigs.github.io/metrics-server/"
   
   values = [
-    "${file("metric-server-values.yaml")}"
+    "${file("${path.module}/metric-server-values.yaml")}"
   ]
 }

@@ -94,16 +94,16 @@ module "eks" {
   }
 
   # 레거시
-  node_security_group_additional_rules = {
-    ingress_alb = {
-      description                   = "sg-dmz-agw-ingress"
-      protocol                      = "tcp"
-      from_port                     = 0
-      to_port                       = 65535
-      type                          = "ingress"
-      referenced_security_group_id = aws_security_group.sg-dmz-agw.id
-    }
-  }
+  # node_security_group_additional_rules = {
+  #   ingress_alb = {
+  #     description                   = "sg-dmz-agw-ingress"
+  #     protocol                      = "tcp"
+  #     from_port                     = 0
+  #     to_port                       = 65535
+  #     type                          = "ingress"
+  #     referenced_security_group_id = aws_security_group.sg-dmz-agw.id
+  #   }
+  # }
 
 # eks service account federation with oidc
 # and give iam policy to service account

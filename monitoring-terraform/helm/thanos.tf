@@ -7,6 +7,6 @@ resource "helm_release" "thanos" {
   version    = "13.4.1"
 
   values = [
-    "${file("thanos-values.yaml")}"
+    "${file("${path.module}/thanos-values.yaml")}"
   ]
 }

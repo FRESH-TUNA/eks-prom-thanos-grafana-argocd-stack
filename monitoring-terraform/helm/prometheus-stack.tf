@@ -7,6 +7,6 @@ resource "helm_release" "kube-prometheus-stack" {
   version    = "56.21.4"
 
   values = [
-    "${file("prometheus-stack-values.yaml")}"
+    "${file("${path.module}/prometheus-stack-values.yaml")}"
   ]
 }
