@@ -45,7 +45,7 @@ resource "aws_lb" "dmz" {
 
   name                                        = "alb-dmz"
   preserve_host_header                        = "false"
-  security_groups                             = [aws_security_group.sg-dmz-agw.id, module.eks.cluster_primary_security_group_id]
+  security_groups                             = [aws_security_group.sg-dmz-agw.id]
 
 #   subnet_mapping {
 #     subnet_id = "subnet-0b9f0e192b14560fb"
