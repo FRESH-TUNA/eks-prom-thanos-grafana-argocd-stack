@@ -17,3 +17,11 @@ resource "aws_vpc_security_group_ingress_rule" "sg-dmz-agw" {
   to_port     = 65535
 }
 
+resource "aws_vpc_security_group_egress_rule" "sg-dmz-agw" {
+  security_group_id = aws_security_group.sg-dmz-agw.id
+
+  cidr_ipv4   = "0.0.0.0/0"
+  from_port   = 0
+  ip_protocol = "tcp"
+  to_port     = 65535
+}
