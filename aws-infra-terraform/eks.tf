@@ -1,5 +1,6 @@
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
+  version = "20.8.3"
 
   cluster_name                   = "monitoring-practice-cluster"
   cluster_version                = 1.28
@@ -47,7 +48,7 @@ module "eks" {
     iam_role_attach_cni_policy = true
     use_name_prefix            = false  # false하지 않으면 리소스 이름 뒤 임의의 난수값이 추가되어 생성됨
     use_custom_launch_template = false  # AWS EKS 관리 노드 그룹에서 제공하는 기본 템플릿을 사용
-
+    
     block_device_mappings = {
       xvda = {
         device_name = "/dev/xvda"
