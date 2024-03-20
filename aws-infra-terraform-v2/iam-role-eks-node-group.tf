@@ -32,10 +32,10 @@ resource "aws_iam_role_policy_attachment" "eks-node-group-AmazonEKS_CNI_Policy" 
   role       = aws_iam_role.eks-node-group.name
 }
 
-# resource "aws_iam_role_policy_attachment" "eks-node-group-AmazonEC2ContainerRegistryReadOnly" {
-#   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-#   role       = aws_iam_role.eks-node-group.name
-# }
+resource "aws_iam_role_policy_attachment" "eks-node-group-AmazonEC2ContainerRegistryReadOnly" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  role       = aws_iam_role.eks-node-group.name
+}
 
 # resource "aws_iam_role_policy_attachment" "eks-node-group-ElasticLoadBalancingFullAccess" {
 #   policy_arn = "arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess"

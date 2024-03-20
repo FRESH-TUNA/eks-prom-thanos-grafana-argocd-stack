@@ -1,7 +1,7 @@
 resource "aws_eks_addon" "coredns" {
   cluster_name = aws_eks_cluster.eks-cluster.name
   addon_name   = "coredns"
-  resolve_conflicts = "PRESERVE"
+  resolve_conflicts_on_update = "PRESERVE"
 }
 
 resource "aws_eks_addon" "kube-proxy" {

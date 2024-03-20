@@ -1,10 +1,10 @@
 resource "aws_security_group" "sg-eks-node" {
-  name        = "sg-eks-node"
-  description = "sg-eks-node"
+  name        = "eks-node"
+  description = "eks-node"
   vpc_id      = aws_vpc.monitoring-practice.id
 
   tags = {
-    Name = "sg-eks-node"
+    Name = "eks-node"
   }
 }
 

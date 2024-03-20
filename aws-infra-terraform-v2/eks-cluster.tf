@@ -16,6 +16,11 @@ resource "aws_eks_cluster" "eks-cluster" {
     security_group_ids = [aws_security_group.sg-eks-cluster.id]
   }
 
+  access_config {
+    authentication_mode                         = "API_AND_CONFIG_MAP"
+    bootstrap_cluster_creator_admin_permissions = false
+  }
+
   kubernetes_network_config {
     service_ipv4_cidr = "10.1.0.0/16"
   }
@@ -29,4 +34,21 @@ resource "aws_eks_cluster" "eks-cluster" {
     aws_iam_role_policy_attachment.eks-AmazonEKSClusterPolicy,
     aws_iam_role_policy_attachment.eks-AmazonEKSVPCResourceController,
   ]
+}
+
+resource "aws_eks_access_entry" "jumper-eks" {
+  cluster_name      = aws_eks_cluster.eks-cluster.name
+  principal_arn     = aws_iam_role.jumper-eks.arn
+  type              = "STANDARD"
+}
+
+resource "aws_eks_access_policy_association" "jumper-eks" {
+  cluster_name      = aws_eks_cluster.eks-cluster.name
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+  principal_arn = aws_iam_role.jumper-eks.arn
+
+  access_scope {
+    type       = "cluster"
+    # namespaces = ["example-namespace"]
+  }
 }

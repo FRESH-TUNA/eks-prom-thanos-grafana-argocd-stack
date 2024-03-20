@@ -1,5 +1,5 @@
 resource "aws_eks_node_group" "eks_node_group" {
-  cluster_name    = aws_eks_cluster.eks_cluster.name
+  cluster_name    = aws_eks_cluster.eks-cluster.name
   node_group_name = "v2"
   node_role_arn   = aws_iam_role.eks-node-group.arn
 

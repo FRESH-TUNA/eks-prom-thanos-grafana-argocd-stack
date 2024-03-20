@@ -41,6 +41,6 @@ resource "aws_lb_target_group" "thanos-frontend" {
 }
 
 resource "aws_autoscaling_attachment" "thanos-frontend" {
-  autoscaling_group_name = module.eks.eks_managed_node_groups_autoscaling_group_names[0]
+  autoscaling_group_name = aws_eks_node_group.eks_node_group.resources[0].autoscaling_groups[0].name
   lb_target_group_arn    = aws_lb_target_group.thanos-frontend.arn
 }

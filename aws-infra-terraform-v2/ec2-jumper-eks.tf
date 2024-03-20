@@ -12,8 +12,7 @@ resource "aws_instance" "jumper-eks" {
   ami = "ami-081a36454cdf357cb"
   instance_type = "t2.micro"
   vpc_security_group_ids = [
-    aws_security_group.sg-private-jumper.id,
-    module.eks.cluster_primary_security_group_id
+    aws_security_group.sg-private-jumper.id
   ]
 
   user_data = <<EOF
@@ -53,4 +52,8 @@ resource "aws_instance" "jumper-eks" {
 #   tags = {
 #     Name = "${var.project_name}-${var.environment}-bastion-ec2"
 #   }
+  depends_on = [
+    aws_nat_gateway.nat-dmz-a,
+    aws_nat_gateway.nat-dmz-b
+  ]
 }

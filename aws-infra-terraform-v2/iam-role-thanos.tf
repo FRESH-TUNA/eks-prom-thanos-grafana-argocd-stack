@@ -17,15 +17,15 @@ resource "aws_iam_role" "thanos" {
         "Effect": "Allow",
         "Principal": {
           # "Federated": "arn:aws:iam::account_number:oidc-provider/oidc.eks.us-east-2.amazonaws.com/id/OIDC_OF_EKS_CLUSTER",
-          "Federated": "${module.eks.oidc_provider_arn}"
+          "Federated": "${aws_iam_openid_connect_provider.eks-cluster.arn}"
         },
         "Action": "sts:AssumeRoleWithWebIdentity",
         "Condition": {
           "StringLike": {
             # "oidc.eks.us-east-2.amazonaws.com/id/OIDC_OF_EKS_CLUSTER:sub": "system:serviceaccount::",
             # "oidc.eks.us-east-2.amazonaws.com/id/OIDC_OF_EKS_CLUSTER:aud": "sts.amazonaws.com"
-            "${module.eks.oidc_provider}:sub": "system:serviceaccount:monitoring:kube-prometheus-stack-prometheus",
-            "${module.eks.oidc_provider}:aud": "sts.amazonaws.com"
+            "${replace(aws_iam_openid_connect_provider.eks-cluster.url, "https://", "")}:sub": "system:serviceaccount:monitoring:kube-prometheus-stack-prometheus",
+            "${replace(aws_iam_openid_connect_provider.eks-cluster.url, "https://", "")}:aud": "sts.amazonaws.com"
           }
         }
       },
@@ -33,15 +33,15 @@ resource "aws_iam_role" "thanos" {
         "Effect": "Allow",
         "Principal": {
           # "Federated": "arn:aws:iam::account_number:oidc-provider/oidc.eks.us-east-2.amazonaws.com/id/OIDC_OF_EKS_CLUSTER",
-          "Federated": "${module.eks.oidc_provider_arn}"
+          "Federated": "${aws_iam_openid_connect_provider.eks-cluster.arn}"
         },
         "Action": "sts:AssumeRoleWithWebIdentity",
         "Condition": {
           "StringLike": {
             # "oidc.eks.us-east-2.amazonaws.com/id/OIDC_OF_EKS_CLUSTER:sub": "system:serviceaccount::",
             # "oidc.eks.us-east-2.amazonaws.com/id/OIDC_OF_EKS_CLUSTER:aud": "sts.amazonaws.com"
-            "${module.eks.oidc_provider}:sub": "system:serviceaccount:monitoring:thanos-storegateway",
-            "${module.eks.oidc_provider}:aud": "sts.amazonaws.com"
+            "${replace(aws_iam_openid_connect_provider.eks-cluster.url, "https://", "")}:sub": "system:serviceaccount:monitoring:thanos-storegateway",
+            "${replace(aws_iam_openid_connect_provider.eks-cluster.url, "https://", "")}:aud": "sts.amazonaws.com"
           }
         }
       },
@@ -49,15 +49,15 @@ resource "aws_iam_role" "thanos" {
         "Effect": "Allow",
         "Principal": {
           # "Federated": "arn:aws:iam::account_number:oidc-provider/oidc.eks.us-east-2.amazonaws.com/id/OIDC_OF_EKS_CLUSTER",
-          "Federated": "${module.eks.oidc_provider_arn}"
+          "Federated": "${aws_iam_openid_connect_provider.eks-cluster.arn}"
         },
         "Action": "sts:AssumeRoleWithWebIdentity",
         "Condition": {
           "StringLike": {
             # "oidc.eks.us-east-2.amazonaws.com/id/OIDC_OF_EKS_CLUSTER:sub": "system:serviceaccount::",
             # "oidc.eks.us-east-2.amazonaws.com/id/OIDC_OF_EKS_CLUSTER:aud": "sts.amazonaws.com"
-            "${module.eks.oidc_provider}:sub": "system:serviceaccount:monitoring:thanos-compactor",
-            "${module.eks.oidc_provider}:aud": "sts.amazonaws.com"
+            "${replace(aws_iam_openid_connect_provider.eks-cluster.url, "https://", "")}:sub": "system:serviceaccount:monitoring:thanos-compactor",
+            "${replace(aws_iam_openid_connect_provider.eks-cluster.url, "https://", "")}:aud": "sts.amazonaws.com"
           }
         }
       }

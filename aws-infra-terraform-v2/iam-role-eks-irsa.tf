@@ -22,7 +22,7 @@ resource "aws_iam_role" "eks-cni-irsa" {
         "Condition": {
           "StringLike": {
             "${replace(aws_iam_openid_connect_provider.eks-cluster.url, "https://", "")}:sub": "system:serviceaccount:kube-system:aws-node",
-            "${mreplace(aws_iam_openid_connect_provider.eks-cluster.url, "https://", "")}:aud": "sts.amazonaws.com"
+            "${replace(aws_iam_openid_connect_provider.eks-cluster.url, "https://", "")}:aud": "sts.amazonaws.com"
           }
         }
       }

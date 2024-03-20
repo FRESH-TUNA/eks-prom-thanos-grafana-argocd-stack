@@ -22,7 +22,7 @@ data "aws_iam_policy_document" "jumper-eks" {
   statement {
     effect    = "Allow"
     actions   = ["eks:DescribeCluster"]
-    resources = [module.eks.cluster_arn]
+    resources = [aws_eks_cluster.eks-cluster.arn]
   }
 }
 
