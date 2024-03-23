@@ -3,9 +3,13 @@ resource "aws_eks_node_group" "eks_node_group" {
   node_group_name = "v2"
   node_role_arn   = aws_iam_role.eks-node-group.arn
 
-  instance_types = ["t3.medium"]
   capacity_type = "ON_DEMAND"
   
+  launch_template {
+    name = aws_launch_template.eks_launch_template.name
+    version = aws_launch_template.eks_launch_template.latest_version
+  }
+
   subnet_ids = [
     aws_subnet.private-eks-node-a.id,
     aws_subnet.private-eks-node-b.id

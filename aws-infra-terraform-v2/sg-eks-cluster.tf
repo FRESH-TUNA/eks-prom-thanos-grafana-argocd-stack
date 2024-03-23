@@ -8,6 +8,7 @@ resource "aws_security_group" "sg-eks-cluster" {
   }
 }
 
+# api server inbound from eks jump server
 resource "aws_vpc_security_group_ingress_rule" "eks-cluster-inbound-from-eks-jumper" {
   security_group_id = aws_security_group.sg-eks-cluster.id
   referenced_security_group_id = aws_security_group.sg-private-jumper.id
@@ -17,6 +18,7 @@ resource "aws_vpc_security_group_ingress_rule" "eks-cluster-inbound-from-eks-jum
   to_port           = 443
 }
 
+# api server inbound from kube proxy of node
 resource "aws_vpc_security_group_ingress_rule" "eks-cluster-inbound-from-node" {
   security_group_id = aws_security_group.sg-eks-cluster.id
   referenced_security_group_id = aws_security_group.sg-eks-node.id
@@ -26,11 +28,18 @@ resource "aws_vpc_security_group_ingress_rule" "eks-cluster-inbound-from-node" {
   to_port           = 443
 }
 
+# inbound self
+resource "aws_vpc_security_group_ingress_rule" "eks-cluster-inbound-self" {
+  security_group_id = aws_security_group.sg-eks-cluster.id
+  referenced_security_group_id = aws_security_group.sg-eks-cluster.id
+
+  ip_protocol = "-1"
+}
+
+# global outbound
 resource "aws_vpc_security_group_egress_rule" "sg-eks-cluster-outbound" {
   security_group_id = aws_security_group.sg-eks-cluster.id
 
   cidr_ipv4   = "0.0.0.0/0"
-  from_port   = 0
-  ip_protocol = "tcp"
-  to_port     = 65535
+  ip_protocol = "-1"
 }

@@ -1,20 +1,14 @@
 # EKS 기반 IAAS 구성
 
-## Architecture V1
-![EKS_ARCH_v1](./EKS_ARCH_v1.jpeg)
+## Architecture V2
+![EKS_ARCH_v2](./EKS_ARCH_v2.png)
 - 고가용성 지향 (2개 가용영역 사용, EKS)
 - 퍼블릭 노출 최소화
-  - s3 gateway endpoint
+  - s3 gateway endpoint 사용
   - eks apiserver 퍼블릭 노출 차단 (jumper로만 접근)
     - kubelet과 api 서버 사이에도 endpoint를 통해 통신한다.
-
-## Loadmap 2.0
 - 보안그룹 최소권한 원칙 적용
 - eks module에서 탈피
-- Thanos ruler 적용
-- Grafana helm chart 분리 및 topologyConstraints 적용하여 HA 적용
-- ingress option 사용
-- obserability 공부
 
 ## EKS 서비스 연구
 ### 대표적인 기능
@@ -31,14 +25,28 @@
   - EKS OIDC Provider Federation 필요
   - EKS service account가 권한을 Assume 하여 사용한다.
 
-### EKS 보안그룹 구조 (eks moudle 사용시 3개가 생성)
+### SG 구조
 - EKS SG
-  - EKS생성시 기본으로 생성되며, worker와 master(control plane endpoint) 모두에 부착된다.
-  - 같은 보안그룹에 한해 인바운드, 아웃바운드가 모두 허용되어있음 (아웃바운드는 최소 정책으로 수정가능)
+  - EKS생성시 기본으로 생성되며, worker와 master(control plane endpoint) 모두에 부착할수 있다. -> AWS측에서 트러블슈팅을 돕기위한 목적으로 추정
+  - 같은 보안그룹에 한해 인바운드, 아웃바운드가 모두 허용되어있음
 - Cluster SG (eks moudle 사용시 생성)
-  - master(control plane endpoint)에 할당되는 보안그룹
+  - master(control plane endpoint)에 할당하는 보안그룹
+  - Node SG (kube-proxy) 로부터의 인바운드 요청 (kube-apiserver) 허용 필요
+  - Node SG (kube-proxy) 로의 아웃바운드 허용 필요
 - Node SG (eks moudle 사용시 생성)
-  - EKS 노드에 할당되는 보안그룹 (use_custom_launch_template = true 설정 필요, 버그가 있는듯 하다)
+  - EKS 노드에 할당되는 보안그룹
+  - Cluster SG (kube-apiserver) 로부터의 인바운드 요청 (kube-proxy) 허용 필요
+  - Node SG 끼리 인바운드 전역 허용
+  - Cluster SG (kube-apiserver) 로의 아웃바운드 허용 필요
+- ALB SG
+  - ALB SG -> Node SG 아웃바운드 허용 (리버스 프록시로 인한 아웃바운드 요청 발생)
+  - internet -> ALB SG 필요한 인바운드 허용
+
+### launch template 에 사용헌 ami 확인
+```
+aws ssm get-parameter --name /aws/service/eks/optimized-ami/1.28/amazon-linux-2/recommended/image_id \
+                --region ap-northeast-2 --query "Parameter.Value" --output text
+```
 
 ## Onboarding
 ### ec2-jumper, ssh 키 발급
@@ -76,7 +84,7 @@ exec bash
 ```
 ### jumper-eks에서 eks 동작여부 확인
 ```bash
-aws eks update-kubeconfig --region ap-northeast-2 --name "monitoring-practice-cluster"
+aws eks update-kubeconfig --region ap-northeast-2 --name "monitoring-cluster"
 
 kubectl get pod -A
 ```

@@ -8,16 +8,15 @@ resource "aws_security_group" "sg-eks-node" {
   }
 }
 
-resource "aws_vpc_security_group_egress_rule" "eks-node-inbound-self" {
+# inbound self ALL
+resource "aws_vpc_security_group_ingress_rule" "eks-node-inbound-self" {
   security_group_id = aws_security_group.sg-eks-node.id
   referenced_security_group_id = aws_security_group.sg-eks-node.id
 
-  from_port   = 0
-  ip_protocol = "tcp"
-  to_port     = 65535
+  ip_protocol = "-1" 
 }
 
-# EKS
+# EKS Node kubelet inbound from Cluster
 resource "aws_vpc_security_group_ingress_rule" "eks-node-inbound-from-cluster" {
   security_group_id = aws_security_group.sg-eks-node.id
   referenced_security_group_id = aws_security_group.sg-eks-cluster.id
@@ -27,16 +26,7 @@ resource "aws_vpc_security_group_ingress_rule" "eks-node-inbound-from-cluster" {
   to_port           = 10250
 }
 
-resource "aws_vpc_security_group_egress_rule" "eks-node-outbound-self" {
-  security_group_id = aws_security_group.sg-eks-node.id
-  referenced_security_group_id = aws_security_group.sg-eks-cluster.id
-  
-  from_port   = 0
-  ip_protocol = "tcp"
-  to_port     = 65535
-}
-
-# ALB
+# EKS Node inbound from ALB
 resource "aws_vpc_security_group_ingress_rule" "eks-node-inbound-from-alb" {
   security_group_id = aws_security_group.sg-eks-node.id
   referenced_security_group_id = aws_security_group.sg-dmz-agw.id
@@ -46,12 +36,10 @@ resource "aws_vpc_security_group_ingress_rule" "eks-node-inbound-from-alb" {
   to_port           = 65535
 }
 
-# global allow
+# global outbound allow
 resource "aws_vpc_security_group_egress_rule" "eks-node-outbound-all-allow" {
   security_group_id = aws_security_group.sg-eks-node.id
 
   cidr_ipv4   = "0.0.0.0/0"
-  from_port   = 0
-  ip_protocol = "tcp"
-  to_port     = 65535
+  ip_protocol = "-1"
 }
